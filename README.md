@@ -347,3 +347,5 @@ For issues and questions:
 
 **⚠️ Disclaimer**: This is a proof-of-concept MVP. For production use, implement additional security measures, error handling, and testing.
 
+#   a i - d e c e n t r a l i z e d - i d e n t i t y - v e r f i c a t i o n  
+ 
