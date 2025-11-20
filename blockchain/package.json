@@ -1,0 +1,19 @@
+{
+  "name": "faceauth-blockchain",
+  "version": "1.0.0",
+  "description": "Blockchain component for FaceAuth system",
+  "main": "index.js",
+  "scripts": {
+    "compile": "truffle compile",
+    "migrate": "truffle migrate",
+    "test": "truffle test",
+    "deploy": "truffle migrate --reset"
+  },
+  "dependencies": {
+    "truffle": "^5.5.7",
+    "web3": "^4.16.0"
+  },
+  "devDependencies": {
+    "@truffle/hdwallet-provider": "^2.0.16"
+  }
+}

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FaceAuth Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-card {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #e1e5e9;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .card-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-content {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .data-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .data-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .data-value {
+            color: #666;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .face-encoding {
+            max-height: 200px;
+            overflow-y: auto;
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0 10px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-success {
+            background: #28a745;
+        }
+
+        .status-warning {
+            background: #ffc107;
+        }
+
+        .status-error {
+            background: #dc3545;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #764ba2;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Back to Login</a>
+        
+        <div class="header">
+            <div class="logo">🎉 Welcome to FaceAuth Dashboard</div>
+            <div class="subtitle">Your authentication data is displayed below</div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <div class="card-title">
+                    <span class="status-indicator status-success"></span>
+                    User Information
+                </div>
+                <div class="card-content">
+                    <div class="data-item">
+                        <div class="data-label">Username:</div>
+                        <div class="data-value" id="username">Loading...</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-label">Authentication Status:</div>
+                        <div class="data-value" id="auth-status">Verified ✅</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-title">
+                    🔐 Password Hash
+                </div>
+                <div class="card-content">
+                    <div class="data-item">
+                        <div class="data-label">SHA-256 Hash:</div>
+                        <div class="data-value" id="password-hash">Loading...</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-label">Hash Length:</div>
+                        <div class="data-value" id="password-hash-length">64 characters</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-title">
+                    👤 Face Encoding
+                </div>
+                <div class="card-content">
+                    <div class="data-item">
+                        <div class="data-label">Face Encoding (128-D Vector):</div>
+                        <div class="data-value face-encoding" id="face-encoding">Loading...</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-label">Encoding Length:</div>
+                        <div class="data-value" id="face-encoding-length">128 dimensions</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-title">
+                    🔒 Face Hash
+                </div>
+                <div class="card-content">
+                    <div class="data-item">
+                        <div class="data-label">SHA-256 Hash:</div>
+                        <div class="data-value" id="face-hash">Loading...</div>
+                    </div>
+                    <div class="data-item">
+                        <div class="data-label">Hash Length:</div>
+                        <div class="data-value" id="face-hash-length">64 characters</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn" onclick="refreshData()">
+                <span id="refresh-loading" class="loading hidden"></span>
+                <span id="refresh-text">Refresh Data</span>
+            </button>
+            <button class="btn btn-secondary" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        // Load dashboard data from URL parameters or localStorage
+        function loadDashboardData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const data = urlParams.get('data');
+            
+            if (data) {
+                try {
+                    const dashboardData = JSON.parse(decodeURIComponent(data));
+                    displayData(dashboardData);
+                } catch (e) {
+                    console.error('Error parsing dashboard data:', e);
+                    showError('Error loading dashboard data');
+                }
+            } else {
+                // Try to load from localStorage
+                const storedData = localStorage.getItem('faceauth_dashboard_data');
+                if (storedData) {
+                    try {
+                        const dashboardData = JSON.parse(storedData);
+                        displayData(dashboardData);
+                    } catch (e) {
+                        console.error('Error parsing stored data:', e);
+                        showError('Error loading stored data');
+                    }
+                } else {
+                    showError('No dashboard data available');
+                }
+            }
+        }
+
+        function displayData(data) {
+            document.getElementById('username').textContent = data.username || 'N/A';
+            document.getElementById('password-hash').textContent = data.password_hash || 'N/A';
+            document.getElementById('password-hash-length').textContent = 
+                (data.password_hash ? data.password_hash.length : 0) + ' characters';
+            
+            if (data.face_encoding) {
+                const encodingStr = JSON.stringify(data.face_encoding);
+                document.getElementById('face-encoding').textContent = encodingStr;
+                document.getElementById('face-encoding-length').textContent = 
+                    data.face_encoding.length + ' dimensions';
+            } else {
+                document.getElementById('face-encoding').textContent = 'N/A';
+            }
+            
+            document.getElementById('face-hash').textContent = data.face_hash || 'N/A';
+            document.getElementById('face-hash-length').textContent = 
+                (data.face_hash ? data.face_hash.length : 0) + ' characters';
+        }
+
+        function refreshData() {
+            const refreshBtn = document.getElementById('refresh-text');
+            const refreshLoading = document.getElementById('refresh-loading');
+            
+            refreshBtn.classList.add('hidden');
+            refreshLoading.classList.remove('hidden');
+            
+            setTimeout(() => {
+                loadDashboardData();
+                refreshBtn.classList.remove('hidden');
+                refreshLoading.classList.add('hidden');
+            }, 1000);
+        }
+
+        function logout() {
+            localStorage.removeItem('faceauth_dashboard_data');
+            window.location.href = 'index.html';
+        }
+
+        function showError(message) {
+            document.getElementById('username').textContent = 'Error';
+            document.getElementById('password-hash').textContent = message;
+            document.getElementById('face-encoding').textContent = 'N/A';
+            document.getElementById('face-hash').textContent = 'N/A';
+        }
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', loadDashboardData);
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,33 @@
+{
+  "address": "",
+  "abi": [
+    {
+      "inputs": [
+        {"internalType": "string", "name": "username", "type": "string"},
+        {"internalType": "string", "name": "passwordHash", "type": "string"},
+        {"internalType": "string", "name": "faceHash", "type": "string"}
+      ],
+      "name": "registerUser",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [{"internalType": "string", "name": "username", "type": "string"}],
+      "name": "getUserHash",
+      "outputs": [{"internalType": "string", "name": "", "type": "string"}],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [{"internalType": "string", "name": "username", "type": "string"}],
+      "name": "isRegistered",
+      "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "network": "ganache",
+  "deployedAt": ""
+}
+
